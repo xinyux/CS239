@@ -3,94 +3,40 @@ import numpy as np
 import matplotlib.pyplot as plt
 from datetime import timedelta
 
+
+def process_csv(read_file, interval):
+    print ("reading file: " + read_file)
+    csv_file = pd.read_csv(read_file, low_memory=False)
+    csv_file.columns = ["epoch_time", "x", "y", "z", "num_lable", "string_lable"]
+    csv_file = csv_file[:-5]
+    csv_file['date_time'] = pd.to_datetime(csv_file['epoch_time'], unit = 'ms') + timedelta(hours=-7)
+    csv_file.index = csv_file['date_time']
+    csv_file['x'] = np.float64(csv_file['x'])
+    csv_file['y'] = np.float64(csv_file['y'])
+    csv_file['z'] = np.float64(csv_file['z'])
+    csv_file = csv_file.resample(interval, label='left').mean()
+    return csv_file
+
+
+def plot_csv(csv_file, read_file):
+    print ("plot file: " + read_file)
+    df = pd.DataFrame(csv_file, index=csv_file.index, columns=list('xyz'))
+    df.plot(title = read_file)
+    plt.legend()
+
+
 def main():
-    read_file_01 = './Data/May_04_2017/1_android.sensor.accelerometer.data.csv'
-    read_file_02 = './Data/May_04_2017/2_android.sensor.magnetic_field.data.csv'
-    read_file_03 = './Data/May_04_2017/3_android.sensor.orientation.data.csv'
-    read_file_04 = './Data/May_04_2017/4_android.sensor.gyroscope.data.csv'
-    read_file_10 = './Data/May_04_2017/10_android.sensor.linear_acceleration.data.csv'
-
-    # set downsample interval
-    interval = '60S' # sample every minute
-    #interval = '120S' # sample every two minutes
-
-    # read accelerometer data, and drop last row, because last row is invalid
-    print('reading file accelerometer')
-    csv_file_01 = pd.read_csv(read_file_01)
-    csv_file_01.columns = ["epoch_time", "x", "y", "z", "num_lable", "string_lable"]
-    csv_file_01 = csv_file_01[:-1]
-    csv_file_01['date_time'] = pd.to_datetime(csv_file_01['epoch_time'], unit = 'ms') + timedelta(hours=-7)
-    csv_file_01.index = csv_file_01['date_time']
-    csv_file_01 = csv_file_01.resample(interval, label='left').mean()
-
-    # read magnetic field data
-    print('reading file magetic field')
-    csv_file_02 = pd.read_csv(read_file_02)
-    csv_file_02.columns = ["epoch_time", "x", "y", "z", "num_lable", "string_lable"]
-    csv_file_02 = csv_file_02[:-2]
-    csv_file_02['date_time'] = pd.to_datetime(csv_file_02['epoch_time'], unit = 'ms') + timedelta(hours=-7)
-    csv_file_02.index = csv_file_02['date_time']
-    csv_file_02['y'] = np.float64(csv_file_02['y'])
-    csv_file_02['z'] = np.float64(csv_file_02['z'])
-    csv_file_02 = csv_file_02.resample(interval, label='left').mean()
-
-    # read orientation data
-    print('reading file orientation')
-    csv_file_03 = pd.read_csv(read_file_03)
-    csv_file_03.columns = ["epoch_time", "x", "y", "z", "num_lable", "string_lable"]
-    csv_file_03 = csv_file_03[:-1]
-    csv_file_03['date_time'] = pd.to_datetime(csv_file_03['epoch_time'], unit = 'ms') + timedelta(hours=-7)
-    csv_file_03.index = csv_file_03['date_time']
-    csv_file_03 = csv_file_03.resample(interval, label='left').mean()
-
-    # read gyroscope data, and drop last two rows, because last two rows are invalid
-    print('reading file gyroscope')
-    csv_file_04 = pd.read_csv(read_file_04)
-    csv_file_04 = csv_file_04[:-2]
-    csv_file_04.columns = ["epoch_time", "x", "y", "z", "num_lable", "string_lable"]
-    csv_file_04['date_time'] = pd.to_datetime(csv_file_04['epoch_time'], unit = 'ms') + timedelta(hours=-7)
-    csv_file_04.index = csv_file_04['date_time']
-    csv_file_04 = csv_file_04.resample(interval, label='left').mean()
-
-    # read significan motion
-    print('reading file linear acceleration')
-    csv_file_10 = pd.read_csv(read_file_10)
-    csv_file_10 = csv_file_10[:-1]
-    csv_file_10.columns = ["epoch_time", "x", "y", "z", "num_lable", "string_lable"]
-    csv_file_10['x'] = np.float64(csv_file_10['x'])
-    csv_file_10['y'] = np.float64(csv_file_10['y'])
-    csv_file_10['z'] = np.float64(csv_file_10['z'])
-    csv_file_10['date_time'] = pd.to_datetime(csv_file_10['epoch_time'], unit = 'ms') + timedelta(hours=-7)
-    csv_file_10.index = csv_file_10['date_time']
-    csv_file_10 = csv_file_10.resample(interval, label='left').mean()
-
-    # make plot
-    print "plot accelerometer"
-    df = pd.DataFrame(csv_file_01, index=csv_file_01.index, columns=list('xyz'))
-    df.plot(title = "acceloerometer data");
-    plt.legend()
-
-    print "plot magnetic field"
-    df = pd.DataFrame(csv_file_02, index=csv_file_02.index, columns=list('xyz'))
-    df.plot(title = "magnetic data")
-    plt.legend()
-
-    print "plot orientation"
-    df = pd.DataFrame(csv_file_03, index=csv_file_03.index, columns=list('xyz'))
-    df.plot(title = "orientation")
-    plt.legend()
-
-    print "plot gyroscope"
-    df = pd.DataFrame(csv_file_04, index=csv_file_04.index, columns=list('xyz'))
-    df.plot(title = "gyroscope data")
-    plt.legend()
-
-    print "plot linear acceleration"
-    df = pd.DataFrame(csv_file_10, index=csv_file_10.index, columns=list('xyz'))
-    df.plot(title = "linear acceleration data")
-    plt.legend()
-
-    plt.show();
+    interval = '60S'
+    folder_names = ["May_04_2017"]
+    file_names = ["1_android.sensor.accelerometer", "2_android.sensor.magnetic_field", "3_android.sensor.orientation",
+                  "4_android.sensor.gyroscope", "9_android.sensor.gravity", "10_android.sensor.linear_acceleration"]
+    for folder in folder_names:
+        print ("Processing folder " + folder)
+        for file in file_names:
+            read_file = "./Data/" + folder + "/" + file + ".data.csv"
+            csv_file = process_csv(read_file, interval)
+            plot_csv(csv_file, read_file)
+    plt.show()
 
 
 if __name__ == '__main__':
