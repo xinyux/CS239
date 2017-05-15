@@ -35,6 +35,12 @@ def process_csv(read_file, interval, file_name):
     csv_file = pd.merge(csv_file, max_file, left_index=True, right_index=True)
     csv_file = pd.merge(csv_file, std_file, left_index=True, right_index=True)
 
+    # Add a delta between max and min
+    csv_file[file_name + "_x_delta"] = csv_file[file_name + "_x_max"]-csv_file[file_name + "_x_min"]
+    csv_file[file_name + "_y_delta"] = csv_file[file_name + "_y_max"]-csv_file[file_name + "_y_min"]
+    csv_file[file_name + "_z_delta"] = csv_file[file_name + "_z_max"]-csv_file[file_name + "_z_min"]
+    csv_file[file_name + "_m_delta"] = csv_file[file_name + "_m_max"]-csv_file[file_name + "_m_min"]
+
     # Print data collection period
     # print (csv_file.head(1).index)
     # print (csv_file.tail(1).index)
@@ -65,18 +71,22 @@ def plot_csv(csv_file, column):
     print ("plot file: {0}".format(csv_file))
     df = pd.DataFrame(csv_file, index=csv_file.index, columns=column)
     df.plot()
-    plt.legend()
+
 
 
 def main():
     interval = '60S'
-    folder_names = ["May_09_2017","May_10_2017","May_11_2017"]
+    folder_names = ["May_09_2017","May_10_2017","May_11_2017","May_13_2017","May_14_2017"]
+    # folder_names = ["May_14_2017"]
     file_names = ["1_android.sensor.accelerometer", "2_android.sensor.magnetic_field", "3_android.sensor.orientation",
                   "4_android.sensor.gyroscope", "9_android.sensor.gravity", "10_android.sensor.linear_acceleration"]
     sleep_label = {"May_09_2017": ['2017-05-09 01:45:00','2017-05-09 09:42:00'],
                    "May_10_2017": ['2017-05-10 00:24:00','2017-05-10 07:05:00'],
-                   "May_11_2017": ['2017-05-11 01:15:00','2017-05-11 10:10:00']}
+                   "May_11_2017": ['2017-05-11 01:15:00','2017-05-11 10:10:00'],
+                   "May_13_2017": ['2017-05-13 02:00:00','2017-05-13 10:25:00'],
+                   "May_14_2017": ['2017-05-14 01:35:00','2017-05-14 10:40:00']}
     feature_eng(folder_names, file_names, interval, sleep_label)
+    # plt.show()
 
 
 if __name__ == '__main__':
