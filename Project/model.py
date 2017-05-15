@@ -74,7 +74,7 @@ def neural_network_classifier(train_data,features,cv_folds=5):
 
 def main():
     # Generate train data
-    all_files = glob.glob("./LabeledData/May_*.csv")
+    all_files = glob.glob("./LabeledData/May_11*.csv")
     train_data = pd.DataFrame()
     list_ = []
     for file_ in all_files:
@@ -89,8 +89,9 @@ def main():
     #            "4_android.sensor.gyroscope", "9_android.sensor.gravity",
     #            "10_android.sensor.linear_acceleration"]
     sensors = ["4_android.sensor.gyroscope"]
-    variables = ["_x", "_y", "_z", "_m"]
-    functions = ["_avg", "_min", "_max", "_std"]
+    # variables = ["_x", "_y", "_z", "_m"]
+    variables = ["_x"]
+    functions = ["_avg", "_min", "_max", "_std", "_delta"]
     for sensor in sensors:
         for variable in variables:
             for function in functions:
