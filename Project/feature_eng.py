@@ -69,6 +69,7 @@ def label_csv(csv_file, sleep_interval):
 
 def plot_csv(csv_file, column):
     print ("plot file: {0}".format(csv_file))
+    csv_file.index = csv_file['date_time']
     df = pd.DataFrame(csv_file, index=csv_file.index, columns=column)
     df.plot()
 

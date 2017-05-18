@@ -8,6 +8,7 @@ import sklearn.naive_bayes as nb
 import sklearn.neural_network as nn
 import sklearn.feature_selection as fs
 import sklearn.model_selection as ms
+import feature_eng as feature
 
 
 def random_forest_classifier(train_data,features,n_trees=50,cv_folds=5):
@@ -135,9 +136,16 @@ def main():
     all_files = glob.glob("./LabeledData/May_*.csv")
     train_data = pd.DataFrame()
     list_ = []
+    columns = ["1_android.sensor.accelerometer_x_avg",
+               "1_android.sensor.accelerometer_y_avg",
+               "1_android.sensor.accelerometer_z_avg",
+               "4_android.sensor.gyroscope_x_avg",
+               "4_android.sensor.gyroscope_y_avg",
+               "4_android.sensor.gyroscope_z_avg"]
     for file_ in all_files:
         print ("Reading file {0} into train_data".format(file_))
         df = pd.read_csv(file_, index_col=None, header=0)
+        feature.plot_csv(df, columns)
         list_.append(df)
     train_data = pd.concat(list_)
 
@@ -157,6 +165,7 @@ def main():
 
     # Get best model
     model = get_best_model(train_data, features)
+    feature.plt.show()
 
 
 if __name__ == '__main__':
