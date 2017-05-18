@@ -75,16 +75,18 @@ def plot_csv(csv_file, column):
 
 
 def main():
-    interval = '60S'
-    folder_names = ["May_09_2017","May_10_2017","May_11_2017","May_13_2017","May_14_2017"]
-    # folder_names = ["May_14_2017"]
+    interval = '300S'
+    folder_names = ["May_09_2017","May_10_2017","May_11_2017","May_13_2017","May_14_2017", "May_16_2017", "May_17_2017"]
+    # folder_names = ["May_17_2017"]
     file_names = ["1_android.sensor.accelerometer", "2_android.sensor.magnetic_field", "3_android.sensor.orientation",
                   "4_android.sensor.gyroscope", "9_android.sensor.gravity", "10_android.sensor.linear_acceleration"]
     sleep_label = {"May_09_2017": ['2017-05-09 01:45:00','2017-05-09 09:42:00'],
                    "May_10_2017": ['2017-05-10 00:24:00','2017-05-10 07:05:00'],
                    "May_11_2017": ['2017-05-11 01:15:00','2017-05-11 10:10:00'],
                    "May_13_2017": ['2017-05-13 02:00:00','2017-05-13 10:25:00'],
-                   "May_14_2017": ['2017-05-14 01:35:00','2017-05-14 10:40:00']}
+                   "May_14_2017": ['2017-05-14 01:35:00','2017-05-14 10:40:00'],
+                   "May_16_2017": ['2017-05-16 01:17:00','2017-05-16 09:40:00'],
+                   "May_17_2017": ['2017-05-17 00:34:00','2017-05-17 07:05:00']}
     feature_eng(folder_names, file_names, interval, sleep_label)
     # plt.show()
 
