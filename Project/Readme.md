@@ -1,6 +1,6 @@
 # SmartWatch as Sleep and Sleep Quality Detector
 
-The goal of this project is to investigate how well a smartwatch can sense and model sleep qulity without significantly changes in people's behabior. We used Andriod app "Decent logger" to log sensor inputs, including accelerometer, magnetic_field, orientation, gyroscope, gravity, linear_acceleration, rotation_vector, significant_motion. The input is sampled at 200Hz. Everyday, a survey is collected from the participant, the survey collects sleep information (time go to bed, time wake up, sleep quality, how sleepy the participant feel next day). We then perform feature engeering to detect sleep and prefict sleep quality. 
+The goal of this project is to investigate how well a smartwatch can sense and model sleep qulity without significantly changes in people's behavior. We used Andriod app "Decent logger" to log sensor inputs, including accelerometer, magnetic_field, orientation, gyroscope, gravity, linear_acceleration, rotation_vector, significant_motion. The input is sampled at 200Hz. Everyday, a survey is collected from the participant, the survey collects sleep information (time go to bed, time wake up, sleep quality, how sleepy the participant feel next day). We then perform feature engeering to detect sleep and predict sleep quality. 
 
 
 ## Data collection
