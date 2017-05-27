@@ -8,6 +8,13 @@ The goal of this project is to investigate how well a smartwatch can sense and m
 Due to battery life constrain, the participant is not asked to wear the smartwatch while sleeping, instead, the participant is asked to charge the watch and place it on bed. 
 
 
+## Files
+
+feature_eng.py : generate features for sleep/nonsleep classification 
+
+model.py : train classification models and predict
+
+
 ## adb commands
 
 Installation

@@ -65,8 +65,6 @@ def feature_eng(folder_names, file_names, interval, sleep_label):
 def label_csv(csv_file, sleep_interval):
     csv_file['sleep'] = '0'
     csv_file.loc[sleep_interval[0]:sleep_interval[1], 'sleep'] = '1'
-    # How many intervals is defined as sleep in the previous 5 intervals
-    csv_file['prev_sleep'] = [sum(csv_file[i-5:i]['sleep']) for i in range(0, len(csv_file))]
 
 
 def plot_csv(csv_file, column):
