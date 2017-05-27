@@ -65,6 +65,8 @@ def feature_eng(folder_names, file_names, interval, sleep_label):
 def label_csv(csv_file, sleep_interval):
     csv_file['sleep'] = '0'
     csv_file.loc[sleep_interval[0]:sleep_interval[1], 'sleep'] = '1'
+    # How many intervals is defined as sleep in the previous 5 intervals
+    csv_file['prev_sleep'] = [sum(csv_file[i-5:i]['sleep']) for i in range(0, len(csv_file))]
 
 
 def plot_csv(csv_file, column):
@@ -76,7 +78,7 @@ def plot_csv(csv_file, column):
 
 
 def main():
-    interval = '300S'
+    interval = '60S'
     folder_names = ["May_09_2017","May_10_2017","May_11_2017","May_13_2017","May_14_2017", "May_16_2017", "May_17_2017"]
     # folder_names = ["May_17_2017"]
     file_names = ["1_android.sensor.accelerometer", "2_android.sensor.magnetic_field", "3_android.sensor.orientation",
