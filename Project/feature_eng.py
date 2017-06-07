@@ -82,10 +82,15 @@ def plot_csv(csv_file, column):
 
 def main():
     interval = '300S'
+
     # folder_names = ["May_09_2017","May_10_2017","May_11_2017","May_13_2017","May_14_2017", "May_16_2017", "May_17_2017"]
     # folder_names = ["May_18_2017","May_19_2017","May_21_2017","May_22_2017","May_23_2017", "May_24_2017", "May_25_2017",
     #                 "May_26_2017", "May_27_2017"]
     folder_names = ["Jun_03_2017", "Jun_05_2017"]
+
+    # folder_names = ["May_09_2017","May_10_2017","May_11_2017","May_13_2017","May_14_2017", "May_16_2017", "May_17_2017"]
+    # folder_names = ["May_17_2017"]
+
     file_names = ["1_android.sensor.accelerometer", "2_android.sensor.magnetic_field", "3_android.sensor.orientation",
                   "4_android.sensor.gyroscope", "9_android.sensor.gravity", "10_android.sensor.linear_acceleration"]
     sleep_label = {"May_09_2017": ['2017-05-09 01:45:00','2017-05-09 09:42:00'],
@@ -115,4 +120,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
