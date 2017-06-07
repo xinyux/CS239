@@ -9,6 +9,8 @@ import sklearn.neural_network as nn
 import sklearn.feature_selection as fs
 import sklearn.model_selection as ms
 import feature_eng as feature
+import matplotlib.pyplot as plt
+import numpy as np
 
 
 def random_forest_classifier(train_data,features,n_trees=50,cv_folds=5):
@@ -96,7 +98,7 @@ def get_best_model(train_data,features):
         best_model = results["model"]
         best_score = results["score"]
 
-        results = gradient_boosting_classifier(train_data,features)
+    results = gradient_boosting_classifier(train_data,features)
     if results["score"] > best_score:
         best_model_name = "GradientBoosting"
         best_model = results["model"]
@@ -131,21 +133,42 @@ def get_best_model(train_data,features):
     return best_model
 
 
+def predict(model, train_data, features, predict_file):
+    model.fit(train_data[features],train_data["sleep"])
+    print('Test on data {0}'.format(predict_file))
+    predict_csv = pd.read_csv(predict_file)
+    test_csv = predict_csv[features]
+
+    # Make prediction and compute accuracy
+    predict_csv['predict'] = model.predict(test_csv)
+    solution_compare = np.where(predict_csv['sleep'] == predict_csv['predict'], 1, 0)
+    total_accurate = sum(solution_compare)
+    total_prediction = len(solution_compare)
+    accuracy = float(total_accurate)/float(total_prediction)
+    print('accuracy on {0} is {1}.'.format(predict_file, accuracy))
+
+    # Make plot
+    columns = [#'1_android.sensor.accelerometer_x_avg', '1_android.sensor.accelerometer_y_avg',
+              # '1_android.sensor.accelerometer_x_avg',
+               #'4_android.sensor.gyroscope_x_avg', '4_android.sensor.gyroscope_y_avg',
+               '4_android.sensor.gyroscope_z_avg',
+               'sleep', 'predict', 'date_time']
+    df = predict_csv[columns]
+    df.index = df['date_time']
+    df.plot()
+    plt.legend(loc='best')
+    plt.show()
+
+
+
 def main():
     # Generate train data
     all_files = glob.glob("./LabeledData/May_*.csv")
     train_data = pd.DataFrame()
     list_ = []
-    columns = ["1_android.sensor.accelerometer_x_avg",
-               "1_android.sensor.accelerometer_y_avg",
-               "1_android.sensor.accelerometer_z_avg",
-               "4_android.sensor.gyroscope_x_avg",
-               "4_android.sensor.gyroscope_y_avg",
-               "4_android.sensor.gyroscope_z_avg"]
     for file_ in all_files:
         print ("Reading file {0} into train_data".format(file_))
         df = pd.read_csv(file_, index_col=None, header=0)
-        feature.plot_csv(df, columns)
         list_.append(df)
     train_data = pd.concat(list_)
 
@@ -156,16 +179,22 @@ def main():
     #            "10_android.sensor.linear_acceleration"]
     sensors = ["1_android.sensor.accelerometer", "4_android.sensor.gyroscope"]
     variables = ["_x", "_y", "_z", "_m"]
-    # variables = ["_m"]
-    functions = ["_avg", "_delta"]
+    # variables = ["_x"]
+    functions = ["_min","_max","_avg","_delta"]
     for sensor in sensors:
         for variable in variables:
             for function in functions:
                 features.append(sensor+variable+function)
 
-    # Get best model
-    model = get_best_model(train_data, features)
-    feature.plt.show()
+    # Get best model from 5 fold cross validation
+    # model = get_best_model(train_data, features)
+
+    # Predict on test data
+    model = linear.LogisticRegression()
+    predict_folder = ['./TestData/Jun_03_2017.csv','./TestData/Jun_05_2017.csv']
+    for predict_file in predict_folder:
+        predict(model, train_data, features, predict_file)
+
 
 
 if __name__ == '__main__':
