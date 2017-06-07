@@ -196,6 +196,5 @@ def main():
         predict(model, train_data, features, predict_file)
 
 
-
 if __name__ == '__main__':
     main()
