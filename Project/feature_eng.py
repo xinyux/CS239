@@ -61,10 +61,10 @@ def feature_eng(folder_names, file_names, interval, sleep_label):
         label_csv(csv_file, sleep_label[folder])
 
         # Save into LabeledData
-        csv_file.to_csv("./LabeledData/{0}.csv".format(folder))
+        # csv_file.to_csv("./LabeledData/{0}.csv".format(folder))
 
         # Save into TestData
-        # csv_file.to_csv("./TestData/{0}.csv".format(folder))
+        csv_file.to_csv("./TestData/{0}.csv".format(folder))
 
 
 def label_csv(csv_file, sleep_interval):
@@ -85,7 +85,7 @@ def main():
     # folder_names = ["May_09_2017","May_10_2017","May_11_2017","May_13_2017","May_14_2017", "May_16_2017", "May_17_2017"]
     # folder_names = ["May_18_2017","May_19_2017","May_21_2017","May_22_2017","May_23_2017", "May_24_2017", "May_25_2017",
     #                 "May_26_2017", "May_27_2017"]
-    folder_names = ["May_29_2017", "May_30_2017"]
+    folder_names = ["Jun_03_2017", "Jun_05_2017"]
     file_names = ["1_android.sensor.accelerometer", "2_android.sensor.magnetic_field", "3_android.sensor.orientation",
                   "4_android.sensor.gyroscope", "9_android.sensor.gravity", "10_android.sensor.linear_acceleration"]
     sleep_label = {"May_09_2017": ['2017-05-09 01:45:00','2017-05-09 09:42:00'],
@@ -106,10 +106,13 @@ def main():
                    "May_27_2017": ['2017-05-27 02:39:00','2017-05-27 11:10:00'],
                    "May_29_2017": ['2017-05-29 01:45:00','2017-05-29 10:30:00'],
                    "May_30_2017": ['2017-05-30 01:30:00','2017-05-30 10:50:00'],
-                   "May_31_2017": ['2017-05-31 01:00:00','2017-05-31 07:05:00']}
+                   "May_31_2017": ['2017-05-31 01:00:00','2017-05-31 07:05:00'],
+                   "Jun_03_2017": ['2017-06-03 01:40:00','2017-06-03 09:50:00'],
+                   "Jun_05_2017": ['2017-06-05 00:50:00','2017-06-05 07:30:00']}
     feature_eng(folder_names, file_names, interval, sleep_label)
     # plt.show()
 
 
 if __name__ == '__main__':
     main()
+
