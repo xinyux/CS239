@@ -1,6 +1,5 @@
 import pandas as pd
 import numpy as np
-import matplotlib.pyplot as plt
 from datetime import timedelta
 
 
@@ -14,11 +13,7 @@ def process_csv(read_file, interval, file_name):
     csv_file['y'] = np.float64(csv_file['y'])
     csv_file['z'] = np.float64(csv_file['z'])
     csv_file['m'] = np.sqrt(csv_file['x']**2 + csv_file['y']**2 + csv_file['z']**2)
-
     csv_file = csv_file[['x','y','z','m']]
-
-    # Select index range
-    # csv_file = csv_file.loc['2017-05-07 02:30:00':'2017-05-07 04:55:00']
 
     # Downsampling
     avg_file = csv_file.resample(interval, label='left').mean()
@@ -41,13 +36,10 @@ def process_csv(read_file, interval, file_name):
     csv_file[file_name + "_z_delta"] = csv_file[file_name + "_z_max"]-csv_file[file_name + "_z_min"]
     csv_file[file_name + "_m_delta"] = csv_file[file_name + "_m_max"]-csv_file[file_name + "_m_min"]
 
-    # Print data collection period
-    # print (csv_file.head(1).index)
-    # print (csv_file.tail(1).index)
     return csv_file
 
 
-def feature_eng(folder_names, file_names, interval, sleep_label):
+def feature_eng(folder_names, file_names, interval, sleep_label, train):
     print ("Start feature engineering")
     for folder in folder_names:
         print ("Processing folder {0}".format(folder))
@@ -61,10 +53,12 @@ def feature_eng(folder_names, file_names, interval, sleep_label):
         label_csv(csv_file, sleep_label[folder])
 
         # Save into LabeledData
-        # csv_file.to_csv("./LabeledData/{0}.csv".format(folder))
+        if train == 1:
+            csv_file.to_csv("./LabeledData/{0}.csv".format(folder))
 
         # Save into TestData
-        csv_file.to_csv("./TestData/{0}.csv".format(folder))
+        if train == 0:
+            csv_file.to_csv("./TestData/{0}.csv".format(folder))
 
 
 def label_csv(csv_file, sleep_interval):
@@ -79,20 +73,20 @@ def plot_csv(csv_file, column):
     df.plot()
 
 
-
 def main():
+    # Size of window to perform resampling
     interval = '300S'
 
-    # folder_names = ["May_09_2017","May_10_2017","May_11_2017","May_13_2017","May_14_2017", "May_16_2017", "May_17_2017"]
-    # folder_names = ["May_18_2017","May_19_2017","May_21_2017","May_22_2017","May_23_2017", "May_24_2017", "May_25_2017",
-    #                 "May_26_2017", "May_27_2017"]
-    folder_names = ["Jun_03_2017", "Jun_05_2017"]
+    train_folder_names = ["May_09_2017","May_10_2017","May_11_2017","May_13_2017","May_14_2017", "May_16_2017", "May_17_2017",
+                          "May_18_2017","May_19_2017","May_21_2017","May_22_2017","May_23_2017", "May_24_2017", "May_25_2017",
+                          "May_26_2017","May_27_2017","May_29_2017","May_30_2017","May_31_2017"]
+    test_folder_names = ["Jun_03_2017", "Jun_05_2017"]
 
-    # folder_names = ["May_09_2017","May_10_2017","May_11_2017","May_13_2017","May_14_2017", "May_16_2017", "May_17_2017"]
-    # folder_names = ["May_17_2017"]
-
+    # Sensors used for feature engineering
     file_names = ["1_android.sensor.accelerometer", "2_android.sensor.magnetic_field", "3_android.sensor.orientation",
                   "4_android.sensor.gyroscope", "9_android.sensor.gravity", "10_android.sensor.linear_acceleration"]
+
+    # Reported sleep time from participant
     sleep_label = {"May_09_2017": ['2017-05-09 01:45:00','2017-05-09 09:42:00'],
                    "May_10_2017": ['2017-05-10 00:24:00','2017-05-10 07:05:00'],
                    "May_11_2017": ['2017-05-11 01:15:00','2017-05-11 10:10:00'],
@@ -114,8 +108,12 @@ def main():
                    "May_31_2017": ['2017-05-31 01:00:00','2017-05-31 07:05:00'],
                    "Jun_03_2017": ['2017-06-03 01:40:00','2017-06-03 09:50:00'],
                    "Jun_05_2017": ['2017-06-05 00:50:00','2017-06-05 07:30:00']}
-    feature_eng(folder_names, file_names, interval, sleep_label)
-    # plt.show()
+
+    # Create training data
+    feature_eng(train_folder_names, file_names, interval, sleep_label, 1)
+
+    # Create testing data
+    feature_eng(test_folder_names, file_names, interval, sleep_label, 0)
 
 
 if __name__ == '__main__':
