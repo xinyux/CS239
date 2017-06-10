@@ -5,10 +5,7 @@ import sklearn.ensemble as en
 import sklearn.tree as tree
 import sklearn.linear_model as linear
 import sklearn.naive_bayes as nb
-import sklearn.neural_network as nn
-import sklearn.feature_selection as fs
 import sklearn.model_selection as ms
-import feature_eng as feature
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -122,12 +119,6 @@ def get_best_model(train_data,features):
         best_model = results["model"]
         best_score = results["score"]
 
-    # results = grid_search(train_data,features)
-    # if results["score"] > best_score:
-    #     best_model_name = "Grid Search"
-    #     best_model = results["model"]
-    #     best_score = results["score"]
-
     print "Best Model:{0}, score:{1}".format(best_model_name, best_score)
 
     return best_model
@@ -148,23 +139,20 @@ def predict(model, train_data, features, predict_file):
     print('accuracy on {0} is {1}.'.format(predict_file, accuracy))
 
     # Make plot
-    columns = [#'1_android.sensor.accelerometer_x_avg', '1_android.sensor.accelerometer_y_avg',
-              # '1_android.sensor.accelerometer_x_avg',
-               #'4_android.sensor.gyroscope_x_avg', '4_android.sensor.gyroscope_y_avg',
-               '4_android.sensor.gyroscope_z_avg',
+    columns = ['4_android.sensor.gyroscope_z_avg',
                'sleep', 'predict', 'date_time']
     df = predict_csv[columns]
     df.index = df['date_time']
     df.plot()
     plt.legend(loc='best')
-    plt.show()
 
+    # uncomment if want to see plots
+    # plt.show()
 
 
 def main():
-    # Generate train data
+    # Generate training data
     all_files = glob.glob("./LabeledData/May_*.csv")
-    train_data = pd.DataFrame()
     list_ = []
     for file_ in all_files:
         print ("Reading file {0} into train_data".format(file_))
@@ -174,19 +162,15 @@ def main():
 
     # Generate feature sets
     features = []
-    # sensors = ["1_android.sensor.accelerometer", "3_android.sensor.orientation",
-    #            "4_android.sensor.gyroscope", "9_android.sensor.gravity",
-    #            "10_android.sensor.linear_acceleration"]
     sensors = ["1_android.sensor.accelerometer", "4_android.sensor.gyroscope"]
     variables = ["_x", "_y", "_z", "_m"]
-    # variables = ["_x"]
     functions = ["_min","_max","_avg","_delta"]
     for sensor in sensors:
         for variable in variables:
             for function in functions:
                 features.append(sensor+variable+function)
 
-    # Get best model from 5 fold cross validation
+    # Uncomment if want to get best model from 5 fold cross validation
     # model = get_best_model(train_data, features)
 
     # Predict on test data
