@@ -12,7 +12,7 @@ Due to battery life constrain, the participant is not asked to wear the smartwat
 
 feature_eng.py : generate features for sleep/nonsleep classification 
 
-model.py : train classification models and predict
+model.py : train classification models and predict sleep/nonsleep
 
 
 ## adb commands
